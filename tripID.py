@@ -102,3 +102,5 @@ sc30_notGPS.to_csv(path+"smart_card_30oct_notGPS_w_tripID.csv")
 #%%
 for shiftID, group in segments_w_tripID.groupby("ShiftID"):
     group = group.sort_values(by=["F_TS"])
+#%%
+segments_w_tripID = pd.read_csv(path+ "segment_directions_w_tripID&Passenger.csv")

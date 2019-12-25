@@ -1,36 +1,34 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec  6 10:58:17 2019
+Created on Fri Jul 25 20:03:11 2019
 
-@author: kocak
+@author: Ulkem
 """
+
 
 import pandas as pd
 
-
-path = "C:/Users/kocak/OneDrive/Masaüstü/reag/"
-#%%
-october = pd.read_csv(path+'ekim.csv',delimiter=',')
+october = pd.read_csv('C:/Users/kocak/OneDrive/Masaüstü/reag/ekim.csv',delimiter=',')
 
 
 # In[1]
 
 #Filter 30th October
 
-oct30 = october[(pd.to_datetime(october["tarih_saat"]) >= pd.to_datetime('2018-10-24 02:59:59')) & (pd.to_datetime(october["tarih_saat"]) < pd.to_datetime('2018-10-25 03:00:00')) & (october["enlem"] > 0) & (october["boylam"] > 0)]
+oct30 = october[(pd.to_datetime(october["tarih_saat"]) >= pd.to_datetime('2018-10-30 02:59:59')) & (pd.to_datetime(october["tarih_saat"]) < pd.to_datetime('2018-10-31 03:00:00')) & (october["enlem"] > 0) & (october["boylam"] > 0)]
 
 
 #oct30.to_csv("30oct.csv")
 #%%
 import pandas as pd
-oct30 = pd.read_csv(path+"oct24.csv")
+oct30 = pd.read_csv("C:/Users/kocak/OneDrive/Masaüstü/reag/oct30.csv")
 #%%
 oct30_1 = oct30[(oct30["arac_no"]==248)&(oct30["hat_no"]==44)]
 #%%
 
 # In[10]
 # Open file to write
-f = open(path+"Oct24_publicTransportation_withStartandEndTime.csv","w")
+f = open("C:/Users/kocak/OneDrive/Masaüstü/reag/Oct30_publicTransportation_withStartandEndTime.csv","w")
 f.write("LID,VID,DRIVER_ID,Start_Time,End_Time,Event_Type\n")
 # In[2]
 
@@ -140,22 +138,22 @@ f.close()
                 
 #Smart Card
 # Read October Smart Card Info
-sc = pd.read_csv(path+'10-ulasim_veri.csv',delimiter=';')
+sc = pd.read_csv('C:/Users/kocak/OneDrive/Masaüstü/reag/10-ulasim_veri.csv',delimiter=';')
 sc['ENLEM'] = pd.to_numeric(sc['ENLEM'].str.replace(',','.'))
 sc['BOYLAM'] = pd.to_numeric(sc['BOYLAM'].str.replace(',','.'))
 
 #Filter 30th October
-sc30 = sc[(pd.to_datetime(sc["TIMESTAMP"]) >= pd.to_datetime('2018-10-24 02:59:59')) & (pd.to_datetime(sc["TIMESTAMP"]) < pd.to_datetime('2018-10-25 03:00:00')) & (sc["ENLEM"] > 0) & (sc["BOYLAM"] > 0)]
+sc30 = sc[(pd.to_datetime(sc["TIMESTAMP"]) >= pd.to_datetime('2018-10-30 02:59:59')) & (pd.to_datetime(sc["TIMESTAMP"]) < pd.to_datetime('2018-10-31 03:00:00')) & (sc["ENLEM"] > 0) & (sc["BOYLAM"] > 0)]
 
 #Group by vehicle ID
 sc30_grouped = sc30.groupby("ARAC_NO")
 
 
-f = open(path+"Oct24_publicTransportation_withStartandEndTime_sc.csv","w")
+f = open("C:/Users/kocak/OneDrive/Masaüstü/reag/Oct30_publicTransportation_withStartandEndTime_sc.csv","w")
 f.write("LID,VID,SLID,Start_Time,End_Time,Event_Type\n")
 #%%
 # Read October Smart Card Info
-sc = pd.read_csv(path+'sc_oct30.csv',delimiter=',')
+sc = pd.read_csv('C:/Users/kocak/OneDrive/Masaüstü/reag/sc_oct30.csv',delimiter=',')
 sc['ENLEM'] = pd.to_numeric(sc['ENLEM'].str.replace(',','.'))
 sc['BOYLAM'] = pd.to_numeric(sc['BOYLAM'].str.replace(',','.'))
 
@@ -166,7 +164,7 @@ sc['BOYLAM'] = pd.to_numeric(sc['BOYLAM'].str.replace(',','.'))
 sc30_grouped = sc30.groupby("ARAC_NO")
 
 
-f = open(path+"Oct30_publicTransportation_withStartandEndTime_sc.csv","w")
+f = open("C:/Users/kocak/OneDrive/Masaüstü/reag/Oct30_publicTransportation_withStartandEndTime_sc.csv","w")
 f.write("LID,VID,SLID,Start_Time,End_Time,Event_Type\n")
 # In[2]
 
@@ -238,7 +236,7 @@ for index, group in sc30_grouped:
                 #Set the values of the next shift
                 prev_lid = row["HAT_NO"]
                 start = row["TIMESTAMP"]
-                prev_slid = row["ALT_HAT_NO"]
+                prev_did = row["ALT_HAT_NO"]
                 count = 1
             
             #If both of them changed
@@ -250,7 +248,7 @@ for index, group in sc30_grouped:
                 #Set the values of the next shift
                 prev_lid = row["HAT_NO"]
                 start = row["TIMESTAMP"]
-                prev_slid = row["ALT_HAT_NO"]
+                prev_did = row["ALT_HAT_NO"]
                 count = 1
             elif (is_first == 1):
                 end = prev_time
@@ -259,20 +257,4 @@ for index, group in sc30_grouped:
                 is_first = 0
                 f.write(toBeWritten)
                 flag = 0
-    event_type = "Last Work for Bus That Day\n"
-    end = prev_time
-    toBeWritten = str(prev_lid) + "," + str(row['ARAC_NO']) + "," + str(prev_slid) + "," + str(start) + "," + str(end) + ", " + event_type
-    f.write(toBeWritten)
-    #Set the values of the next shift
-    prev_lid = row["HAT_NO"]
-    start = row["TIMESTAMP"]
-    prev_slid = row["ALT_HAT_NO"]
-    count = 1
 f.close()
-
-#%%
-
-sc30_248 = sc30[sc30["ARAC_NO"]==248]
-#%%
-sc30_248a = pd.read_csv(path+"Oct30_publicTransportation_withStartandEndTime_sc.csv")
-sc30_248a = sc30_248a[sc30_248a["VID"]==248]
