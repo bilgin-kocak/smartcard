@@ -28,3 +28,7 @@ gps_selected.drop_duplicates(subset="geometry",inplace = True)
 for i in range(62,69):
     plt.scatter(gps_selected.loc[i,"POINT_LON"],gps_selected.loc[i,"POINT_LAT"],c="yellow",edgecolor="darkblue",marker="d")
     plt.text(gps_selected.loc[i,"POINT_LON"],gps_selected.loc[i,"POINT_LAT"],i,fontsize=12,color="black") 
+    #%%
+ax = road.plot(color="red")
+road1 = road[(road["D_SIRA_1"]>31)&(road["D_SIRA_1"]<72)]
+plt.scatter(road1["X1"],road1["Y1"],c="black")

@@ -33,7 +33,7 @@ def createSegmentBase(sc,test):
     buffer_.geometry_50 = buffer_['geometry'].buffer(0.00045045045)
     buffer_.geometry_30 = buffer_['geometry'].buffer(0.00022522522)
     buffer_.geometry_10 = buffer_['geometry'].buffer(0.00009009009)
-    
+    buffer_temp = gpd.GeoDataFrame(buffer_,geometry = buffer_["geometry_100"])
     
     # Flag to see whether the segment is in 100m buffer of a segment
     flag = 0
